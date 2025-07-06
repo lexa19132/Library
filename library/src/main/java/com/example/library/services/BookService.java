@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.library.DTO.BookDTO;
 import com.example.library.DTO.DescribedBookDTO;
+import com.example.library.DTO.NoIdBookDTO;
 import com.example.library.mappers.BookMapper;
 import com.example.library.repositories.BookRepository;
 
@@ -38,6 +39,22 @@ public class BookService {
 	
 	public void deleteBookById(Long id) {
 		repository.findById(id).ifPresent((e) -> repository.delete(e));
-		//Пока не знаю, хочу ли я вернуть true/false тут.
 	}
+	
+	public DescribedBookDTO addBook(NoIdBookDTO book) {
+		return mapper.toDescribedDTO(repository.save(mapper.toEntity(book)));   
+	}
+	
+	public DescribedBookDTO alterBook(Long id, NoIdBookDTO book) {
+		repository.findById(id).ifPresent((e) -> {
+			e.setAuthors(book.authors());
+			e.setDescription(book.description());
+			e.setGenre(book.genre());
+			e.setIsbn(book.isbn());
+			e.setName(book.name());
+			repository.save(e);
+		});
+		return mapper.toDescribedDTO(repository.findById(id).get());
+	}
+	//Надо будет подумать, что случится если нарушатся constraints в базе, просто тут не написано прокинет ли метод save exception.
 }
