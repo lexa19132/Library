@@ -1,17 +1,14 @@
 package com.example.library.model.entity;
 
+import java.sql.Types;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
+import org.hibernate.annotations.JdbcTypeCode;
 import com.example.library.model.Genre;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,45 +17,49 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "")
+@Table(name = "books")
 public class Book {
-
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "book_id_sequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "book_id_sequence_generator")
 	@SequenceGenerator(name = "book_id_sequence_generator", sequenceName = "book_id_sequence")
+	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "isbn", length = 17, unique = true, nullable = false)
+	@Column(name = "isbn", length = 17, unique = true)
 	private String isbn;
 	
-	@Column(name = "name", length = 255, nullable = false)
+	@Column(name = "name", length = 255)
 	private String name;
 	
-	@Column(name = "genre", nullable = false)
+	@Column(name = "genre")
 	@Enumerated(value = EnumType.STRING)
 	private Genre genre;
 	
 	@Column(name = "description")
 	@Lob
+	@JdbcTypeCode(value = Types.LONGNVARCHAR)
 	private String description;
 	
-	@ElementCollection(fetch = FetchType.EAGER) //Может быть поменяю, а вообще Eager вполне подходит мне.
-	@CollectionTable(name = "authors", joinColumns = {
-		@JoinColumn(name = "author_id", referencedColumnName = "id", table = "authors")
-	})
-	@Fetch(value = FetchMode.JOIN)
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+		name = "books_authors",
+		joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id")
+	)
 	private Set<Author> authors = new HashSet<>();
-	//Автором ожет быть несколько.
 	
 	public Book() {
 		
 	}
-	
+
 	public Book(Long id, String isbn, String name, Genre genre, String description, Set<Author> authors) {
 		this.id = id;
 		this.isbn = isbn;
@@ -67,11 +68,11 @@ public class Book {
 		this.description = description;
 		this.authors = authors;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
-
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -118,7 +119,7 @@ public class Book {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, isbn);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -130,12 +131,11 @@ public class Book {
 			return false;
 		}
 		Book other = (Book) obj;
-		return Objects.equals(id, other.id) && Objects.equals(isbn, other.isbn);
+		return Objects.equals(id, other.id);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Book [id=%s, isbn=%s, name=%s, genre=%s, description=%s, authors=%s]", id, isbn, name, genre,
-				description, authors);
+		return String.format("Book [id=%s, isbn=%s, name=%s, genre=%s, description=%s, authors=%s]", id, isbn, name, genre, description, authors);
 	}
 }

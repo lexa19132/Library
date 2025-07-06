@@ -3,24 +3,31 @@ package com.example.library.model.entity;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-//Я не помню надо ли в JPA вешать сюда Embeddedable, поэтому потом займусь этим.
+@Entity
+@Table(name = "authors")
 public class Author {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "firstName", length = 255, nullable = false)
+	@Column(name = "firstName", nullable = false, length = 255)
 	private String firstName;
 	
-	@Column(name = "middleName", length = 255, nullable = false)
+	@Column(name = "middleName", nullable = false, length = 255)
 	private String middleName;
 	
-	@Column(name = "lastName", length = 255, nullable = false)
+	@Column(name = "lastName", nullable = false, length = 255)
 	private String lastName;
 	
-	public Author() {
-		
-	}
+	public Author() {}
 
 	public Author(Long id, String firstName, String middleName, String lastName) {
 		this.id = id;
@@ -49,8 +56,8 @@ public class Author {
 		return middleName;
 	}
 
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
+	public void setMiddleName(String middelName) {
+		this.middleName = middelName;
 	}
 
 	public String getLastName() {
@@ -82,5 +89,5 @@ public class Author {
 	public String toString() {
 		return String.format("Author [id=%s, firstName=%s, middleName=%s, lastName=%s]", id, firstName, middleName,
 				lastName);
-	}
+	}	
 }
