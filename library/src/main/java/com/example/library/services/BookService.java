@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.library.DTO.BookDTO;
@@ -24,7 +22,7 @@ public class BookService {
 	
 	private final AuthorMapper authorMapper;
 	
-	private static final Logger logger = LoggerFactory.getLogger(BookService.class);
+//	private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 	
 	public BookService(BookRepository repository, BookMapper bookMapper, AuthorMapper authorMapper ) {
 		this.repository = repository;
@@ -49,7 +47,6 @@ public class BookService {
 	}
 	
 	public BookDTO addBook(NoIdBookDTO book) {
-		logger.info(book.toString());
 		return  bookMapper.toDTO(repository.save(bookMapper.toEntity(book)));   
 	}
 	

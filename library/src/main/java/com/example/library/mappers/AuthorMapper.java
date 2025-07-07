@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -3,7 +3,7 @@ package com.example.library.controllers.api;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,8 +20,16 @@ import com.example.library.DTO.BookDTO;
 import com.example.library.DTO.NoIdBookDTO;
 import com.example.library.services.BookService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/book")
+@Tag(
+	name = "BookApiController", 
+	description = "Main library API for the interaction with library database"
+)
 public class BookApiController {
 	
 	private final BookService service;
@@ -31,6 +39,9 @@ public class BookApiController {
 	}
 	
 	@GetMapping
+	@Operation(
+		
+	)
 	public ResponseEntity<BookDTO> getBookByIsbn(@RequestParam String isbn) {
 		return ResponseEntity.of(service.getBookByIsbn(isbn));
 	}
@@ -54,13 +65,13 @@ public class BookApiController {
 	}	
 	
 	@PostMapping
-	public ResponseEntity<BookDTO> addBook(@RequestBody(required = true) NoIdBookDTO book) {
+	public ResponseEntity<BookDTO> addBook(@RequestBody(required = true) @Valid NoIdBookDTO book) {
 		BookDTO dto = service.addBook(book);
 		return ResponseEntity.created(URI.create("/api/book/" + String.valueOf(dto.id()))).body(dto);
 	}
 	
 	@PostMapping("/{id}")
-	public ResponseEntity<BookDTO> alterBook(@PathVariable Long id, @RequestBody(required = true) NoIdBookDTO book) {
+	public ResponseEntity<BookDTO> alterBook(@PathVariable Long id, @RequestBody(required = true) @Valid NoIdBookDTO book) {
 		BookDTO dto = service.alterBook(id, book);
 		return ResponseEntity.created(URI.create("/api/book/" + String.valueOf(dto.id()))).body(dto);
 	}
@@ -68,8 +79,8 @@ public class BookApiController {
 	//-----------------------------------------------------------------------------------------------------------------------------------
 	//Вообще говорят, что есть способ получше обрабатывать исключения в спринге, но мне подходит и этот так как у меня всего 1 контроллер.
 	
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<String> handleDataBaseConstraintsVioloationExcepttion(DataIntegrityViolationException exception) {
+	@ExceptionHandler(DataAccessException.class)
+	public ResponseEntity<String> handleDataBaseConstraintsVioloationExcepttion(DataAccessException exception) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	}
 }
