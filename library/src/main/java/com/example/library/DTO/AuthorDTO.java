@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record AuthorDTO(	
-		Long id,
+public record AuthorDTO(
 		@NotEmpty
 		@Size(max = 255)
 		@Pattern(regexp = "^[A-Z][a-z]+$")

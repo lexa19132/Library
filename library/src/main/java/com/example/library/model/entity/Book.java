@@ -49,7 +49,7 @@ public class Book {
 	@JdbcTypeCode(value = Types.LONGNVARCHAR)
 	private String description;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
 	@JoinTable(
 		name = "books_authors",
 		joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
