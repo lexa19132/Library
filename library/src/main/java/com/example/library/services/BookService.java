@@ -5,11 +5,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.library.DTO.BookDTO;
-import com.example.library.DTO.DescribedBookDTO;
 import com.example.library.DTO.NoIdBookDTO;
+import com.example.library.mappers.AuthorMapper;
 import com.example.library.mappers.BookMapper;
 import com.example.library.repositories.BookRepository;
 
@@ -18,43 +20,48 @@ public class BookService {
 	
 	private final BookRepository repository;
 	
-	private final BookMapper mapper;
+	private final BookMapper bookMapper;
 	
-	public BookService(BookRepository repository, BookMapper mapper) {
+	private final AuthorMapper authorMapper;
+	
+	private static final Logger logger = LoggerFactory.getLogger(BookService.class);
+	
+	public BookService(BookRepository repository, BookMapper bookMapper, AuthorMapper authorMapper ) {
 		this.repository = repository;
-		this.mapper = mapper;
+		this.bookMapper = bookMapper;
+		this.authorMapper = authorMapper;
 	}
 	
-	public Optional<DescribedBookDTO> getBookByIsbn(String isbn) {
-		return repository.findByIsbn(isbn).map((e) -> mapper.toDescribedDTO(e));
+	public Optional<BookDTO> getBookByIsbn(String isbn) {
+		return repository.findByIsbn(isbn).map((e) -> bookMapper.toDTO(e));
 	}
 	
 	public List<BookDTO> getAllBooks() {
-		return StreamSupport.stream(repository.findAll().spliterator(), false).map((e) -> mapper.toDTO(e)).collect(Collectors.toList());
+		return StreamSupport.stream(repository.findAll().spliterator(), false).map((e) -> bookMapper.toDTO(e)).collect(Collectors.toList());
 	}
 	
-	public Optional<DescribedBookDTO> getBookById(Long id) {
-		return repository.findById(id).map((e) -> mapper.toDescribedDTO(e));
+	public Optional<BookDTO> getBookById(Long id) {
+		return repository.findById(id).map((e) ->  bookMapper.toDTO(e));
 	}	
 	
 	public void deleteBookById(Long id) {
 		repository.findById(id).ifPresent((e) -> repository.delete(e));
 	}
 	
-	public DescribedBookDTO addBook(NoIdBookDTO book) {
-		return mapper.toDescribedDTO(repository.save(mapper.toEntity(book)));   
+	public BookDTO addBook(NoIdBookDTO book) {
+		logger.info(book.toString());
+		return  bookMapper.toDTO(repository.save(bookMapper.toEntity(book)));   
 	}
 	
-	public DescribedBookDTO alterBook(Long id, NoIdBookDTO book) {
+	public BookDTO alterBook(Long id, NoIdBookDTO book) {
 		repository.findById(id).ifPresent((e) -> {
-			e.setAuthors(book.authors());
+			e.setAuthors(authorMapper.toAuthorEntitySet(book.authors()));
 			e.setDescription(book.description());
 			e.setGenre(book.genre());
 			e.setIsbn(book.isbn());
 			e.setName(book.name());
 			repository.save(e);
 		});
-		return mapper.toDescribedDTO(repository.findById(id).get());
+		return  bookMapper.toDTO(repository.findById(id).get());
 	}
-	//Надо будет подумать, что случится если нарушатся constraints в базе, просто тут не написано прокинет ли метод save exception.
 }

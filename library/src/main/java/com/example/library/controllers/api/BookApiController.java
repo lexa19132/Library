@@ -3,8 +3,11 @@ package com.example.library.controllers.api;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.DTO.BookDTO;
-import com.example.library.DTO.DescribedBookDTO;
 import com.example.library.DTO.NoIdBookDTO;
 import com.example.library.services.BookService;
 
@@ -29,7 +31,7 @@ public class BookApiController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<DescribedBookDTO> getBookByIsbn(@RequestParam String isbn) {
+	public ResponseEntity<BookDTO> getBookByIsbn(@RequestParam String isbn) {
 		return ResponseEntity.of(service.getBookByIsbn(isbn));
 	}
 	
@@ -40,7 +42,7 @@ public class BookApiController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<DescribedBookDTO> getBookById(@PathVariable Long id) {
+	public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
 		return ResponseEntity.of(service.getBookById(id));
 	}
 	
@@ -52,14 +54,22 @@ public class BookApiController {
 	}	
 	
 	@PostMapping
-	public ResponseEntity<DescribedBookDTO> addBook(@RequestBody(required = true) NoIdBookDTO book) {
-		DescribedBookDTO dto = service.addBook(book);
+	public ResponseEntity<BookDTO> addBook(@RequestBody(required = true) NoIdBookDTO book) {
+		BookDTO dto = service.addBook(book);
 		return ResponseEntity.created(URI.create("/api/book/" + String.valueOf(dto.id()))).body(dto);
 	}
 	
 	@PostMapping("/{id}")
-	public ResponseEntity<DescribedBookDTO> alterBook(@PathVariable Long id, @RequestBody(required = true) NoIdBookDTO book) {
-		DescribedBookDTO dto = service.alterBook(id, book);
+	public ResponseEntity<BookDTO> alterBook(@PathVariable Long id, @RequestBody(required = true) NoIdBookDTO book) {
+		BookDTO dto = service.alterBook(id, book);
 		return ResponseEntity.created(URI.create("/api/book/" + String.valueOf(dto.id()))).body(dto);
+	}
+	
+	//-----------------------------------------------------------------------------------------------------------------------------------
+	//Вообще говорят, что есть способ получше обрабатывать исключения в спринге, но мне подходит и этот так как у меня всего 1 контроллер.
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<String> handleDataBaseConstraintsVioloationExcepttion(DataIntegrityViolationException exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	}
 }

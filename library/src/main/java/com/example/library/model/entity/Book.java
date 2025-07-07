@@ -8,6 +8,7 @@ import java.util.Set;
 import org.hibernate.annotations.JdbcTypeCode;
 import com.example.library.model.Genre;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
