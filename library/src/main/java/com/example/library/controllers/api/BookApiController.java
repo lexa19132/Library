@@ -20,16 +20,10 @@ import com.example.library.DTO.BookDTO;
 import com.example.library.DTO.NoIdBookDTO;
 import com.example.library.services.BookService;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/book")
-@Tag(
-	name = "BookApiController", 
-	description = "Main library API for the interaction with library database"
-)
 public class BookApiController {
 	
 	private final BookService service;
@@ -39,9 +33,6 @@ public class BookApiController {
 	}
 	
 	@GetMapping
-	@Operation(
-		
-	)
 	public ResponseEntity<BookDTO> getBookByIsbn(@RequestParam String isbn) {
 		return ResponseEntity.of(service.getBookByIsbn(isbn));
 	}
@@ -73,7 +64,7 @@ public class BookApiController {
 	@PostMapping("/{id}")
 	public ResponseEntity<BookDTO> alterBook(@PathVariable Long id, @RequestBody(required = true) @Valid NoIdBookDTO book) {
 		BookDTO dto = service.alterBook(id, book);
-		return ResponseEntity.created(URI.create("/api/book/" + String.valueOf(dto.id()))).body(dto);
+		return dto == null ? ResponseEntity.badRequest().build() : ResponseEntity.created(URI.create("/api/book/" + String.valueOf(dto.id()))).body(dto);
 	}
 	
 	//-----------------------------------------------------------------------------------------------------------------------------------

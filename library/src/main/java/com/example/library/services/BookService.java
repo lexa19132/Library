@@ -11,6 +11,7 @@ import com.example.library.DTO.BookDTO;
 import com.example.library.DTO.NoIdBookDTO;
 import com.example.library.mappers.AuthorMapper;
 import com.example.library.mappers.BookMapper;
+import com.example.library.model.entity.Book;
 import com.example.library.repositories.BookRepository;
 
 @Service
@@ -21,8 +22,6 @@ public class BookService {
 	private final BookMapper bookMapper;
 	
 	private final AuthorMapper authorMapper;
-	
-//	private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 	
 	public BookService(BookRepository repository, BookMapper bookMapper, AuthorMapper authorMapper ) {
 		this.repository = repository;
@@ -51,14 +50,17 @@ public class BookService {
 	}
 	
 	public BookDTO alterBook(Long id, NoIdBookDTO book) {
-		repository.findById(id).ifPresent((e) -> {
-			e.setAuthors(authorMapper.toAuthorEntitySet(book.authors()));
-			e.setDescription(book.description());
-			e.setGenre(book.genre());
-			e.setIsbn(book.isbn());
-			e.setName(book.name());
-			repository.save(e);
-		});
-		return  bookMapper.toDTO(repository.findById(id).get());
+		Optional<Book> queryResult = repository.findById(id);
+		if(queryResult.isPresent()) {
+			Book target = queryResult.get();
+			target.setAuthors(authorMapper.toAuthorEntitySet(book.authors()));
+			target.setDescription(book.description());
+			target.setGenre(book.genre());
+			target.setIsbn(book.isbn());
+			target.setName(book.name());
+			repository.save(target);
+			return bookMapper.toDTO(target);
+		}
+		return null;
 	}
 }
