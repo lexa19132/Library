@@ -28,7 +28,6 @@ public abstract class AuthorMapper {
 		} else {
 			return new Author(null, dto.firstName(), dto.middleName(), dto.lastName());
 		}
-		
 	}
 	
 	public abstract AuthorDTO toDTO(Author entity);

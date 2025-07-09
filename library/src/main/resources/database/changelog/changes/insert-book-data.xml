@@ -5,8 +5,19 @@
 	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd 
 	http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-	
+
 	<changeSet author="id" id="insert_book_data">
-		<sqlFile path="data/data.sql" relativeToChangelogFile="true" splitStatements="false"/>
+	
+		<preConditions>
+			<tableExists tableName="books"/>
+			<tableExists tableName="authors"/>
+			<tableExists tableName="books_authors"/>
+			<sequenceExists sequenceName="book_id_sequence"/>
+		</preConditions>
+		
+		<sqlFile path="classpath:/database/changelog/data/book_data.sql"
+			splitStatements="false" />
+		<!-- почему-то не работал аттрибут relativeToChangeLogFile -->
+
 	</changeSet>
 </databaseChangeLog>

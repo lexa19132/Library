@@ -11,5 +11,6 @@ public class OpenAPIConfig {
     @Bean
     public OpenAPI customOpenAPI() {
 		return new OpenAPI();
+		//потом допишу что-нить, это пока что неважно.
 	}
 }

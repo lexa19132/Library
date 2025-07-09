@@ -66,5 +66,7 @@
 		
 		<addUniqueConstraint columnNames="book_id, author_id" tableName="books_authors"></addUniqueConstraint>
 		
+		
+		
 	</changeSet>
 </databaseChangeLog>
