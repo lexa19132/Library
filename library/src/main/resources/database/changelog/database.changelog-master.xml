@@ -2,47 +2,13 @@
 <databaseChangeLog
 	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd 
+	http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd" >
 	
-	<changeSet author="lexa" id="1" >
+	<include file="changes/book-entity-schema.xml"  relativeToChangelogFile="true" errorIfMissing="true"/>
+	<include file="changes/user-entity-schema.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
+	<include file="changes/insert-book_data.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
 	
-		<createTable tableName="books">
-			<column name="id" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			
-			<column name="name" type="VARCHAR(255)">
-				<constraints nullable="false"/>
-			</column>
-			
-			<column name="isbn" type="VARCHAR(17)">
-				<constraints nullable="false" unique="true"/>
-			</column>
-			
-			<column name="description" type="TEXT"></column>			
-			
-			<column name = "price" type ="DECIMAL(19, 4)" >
-				<constraints checkConstraint="price >= 0" />
-			</column>
-		</createTable>
-		
-		<createTable tableName="authors">
-			<column name="id" type="BIGINT" autoIncrement="true">
-				<constraints nullable="false" primaryKey="true"/>
-			</column>
-			
-			<column name="firstName" type="VARCHAR(255)">
-				<constraints nullable="false"/>
-			</column>
-			
-			<column name="middleName" type="VARCHAR(255)">
-				<constraints nullable="false"/>
-			</column>
-			
-			<column name="lastName" type="VARCHAR(255)">
-				<constraints nullable="false"/>
-			</column>
-		</createTable>	
-		
-	</changeSet>
+
 </databaseChangeLog>

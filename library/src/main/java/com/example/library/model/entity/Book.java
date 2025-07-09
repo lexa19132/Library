@@ -5,7 +5,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.example.library.model.Genre;
 
 import jakarta.persistence.CascadeType;
@@ -42,6 +45,7 @@ public class Book {
 	
 	@Column(name = "genre")
 	@Enumerated(value = EnumType.STRING)
+	@JdbcTypeCode(SqlTypes.NAMED_ENUM)
 	private Genre genre;
 	
 	@Column(name = "description")
