@@ -64,9 +64,6 @@
 		
 		<createSequence sequenceName="book_id_sequence" startValue="1" incrementBy="50" dataType="BIGINT"/>
 		
-		<addUniqueConstraint columnNames="book_id, author_id" tableName="books_authors"></addUniqueConstraint>
-		
-		
-		
+		<addUniqueConstraint columnNames="book_id, author_id" tableName="books_authors"></addUniqueConstraint>	
 	</changeSet>
 </databaseChangeLog>

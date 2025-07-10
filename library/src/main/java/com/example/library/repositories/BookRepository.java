@@ -7,12 +7,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.library.model.entity.Book;
+import com.example.library.model.entity.BookEntity;
 
 @Repository
-public interface BookRepository extends CrudRepository<Book, Long>{
+public interface BookRepository extends CrudRepository<BookEntity, Long>{
 	
 	@Query("SELECT b FROM Book b LEFT JOIN FETCH b.authors WHERE b.isbn = :isbn")
-	//Мб потом сделаю EntityGraph
-	public Optional<Book> findByIsbn(@Param(value = "isbn") String isbn);
+	public Optional<BookEntity> findByIsbn(
+		@Param(value = "isbn") String isbn
+	);
 }
