@@ -22,6 +22,8 @@ import com.example.library.model.DTO.BookDTO;
 import com.example.library.model.DTO.validation.CreateValidationGroup;
 import com.example.library.storages.BookStorage;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @RestController
 @RequestMapping("/api/book")
 public class BookApiController {
@@ -68,8 +70,11 @@ public class BookApiController {
 	
 	//------------------------------------------------------------------------------------------------------------------------
 	
-	@ExceptionHandler(DataAccessException.class)
-	public ResponseEntity<String> handleDataBaseConstraintsVioloationExcepttion(DataAccessException exception) {
+	@ExceptionHandler({
+	    DataAccessException.class,
+	    EntityNotFoundException.class 
+	})
+	public ResponseEntity<String> handleDataBaseConstraintsVioloationExcepttion(Exception exception) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	} 
 }

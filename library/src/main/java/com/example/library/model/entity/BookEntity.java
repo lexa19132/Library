@@ -59,7 +59,7 @@ public class BookEntity {
 	@JdbcTypeCode(value = Types.LONGNVARCHAR)
 	private String description;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
 	@JoinTable(
 		name = "books_authors",
 		joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),

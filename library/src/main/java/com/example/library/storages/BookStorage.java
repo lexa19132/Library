@@ -11,9 +11,12 @@ import com.example.library.mappers.AuthorDTOMapper;
 import com.example.library.mappers.AuthorEntityMapper;
 import com.example.library.mappers.BookDTOMapper;
 import com.example.library.mappers.BookEntityMapper;
-import com.example.library.model.Book;
 import com.example.library.model.DTO.BookDTO;
+import com.example.library.model.entity.BookEntity;
 import com.example.library.repositories.BookRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Component
 public class BookStorage {
@@ -54,32 +57,30 @@ public class BookStorage {
 	}
 	
 	public void deleteBookById(Long id) {
-		repository.deleteById(id);
+		repository.findById(id).ifPresentOrElse(
+			(e) -> repository.delete(e), 
+			() -> {
+				throw new EntityNotFoundException("Could not delete book by id, such book doesnt exists.");
+			}
+		);
 	}
 	
-	public BookDTO addBook(BookDTO dto) { //
+	public BookDTO addBook(BookDTO dto) { 
 		return bookDTOMapper.toDTO(bookEntityMapper.toModel(repository.save(bookEntityMapper.toEntity(bookDTOMapper.toModel(dto)))));
-		//кошмар
 	}
 	
-	public BookDTO alterBook(Long id, BookDTO dto) {
-		if(dto.id() != null) {
-			return bookDTOMapper.toDTO(bookEntityMapper.toModel(repository.save(bookEntityMapper.toEntity(bookDTOMapper.toModel(dto)))));
-			//да, этого достаточно.
-		}
+	@Transactional //Как в hibernate работает?
+	public BookDTO alterBook(Long id, BookDTO dto) {	
+		BookEntity book = repository.findById(id)
+	            .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + id));
 		
-		var queryResult = repository.findById(id);
-		if (queryResult.isPresent()) {
-			Book model = bookEntityMapper.toModel(queryResult.get());
-			return queryResult.map((e) -> {
-				e.setName(model.getName());
-				e.setGenre(model.getGenre());
-				e.setDescription(model.getDescription());
-				e.setIsbn(model.getIsbn());
-				e.setAuthors(authorEntityMapper.toEntitySet(model.getAuthors()));
-				return bookDTOMapper.toDTO(bookEntityMapper.toModel(e));
-			}).get();
-		}
-		return null;
+		book.setAuthors(authorEntityMapper.toEntitySet(authorDTOMapper.toModelSet(dto.authors())));
+		book.setDescription(dto.description());
+		book.setGenre(dto.genre());
+		book.setIsbn(dto.isbn());
+		book.setName(dto.name());
+		
+		return bookDTOMapper.toDTO(bookEntityMapper.toModel(book));
+		
 	}
 }
