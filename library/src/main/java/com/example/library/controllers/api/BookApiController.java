@@ -3,6 +3,7 @@ package com.example.library.controllers.api;
 import java.net.URI;
 import java.util.List;
 
+import com.example.library.model.DTO.validation.UpdateValidationGroup;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,54 +28,43 @@ import jakarta.persistence.EntityNotFoundException;
 @RestController
 @RequestMapping("/api/book")
 public class BookApiController {
-	
+
 	private final BookStorage storage;
-	
+
 	public BookApiController(BookStorage storage) {
 		this.storage = storage;
 	}
-	
+
 	@GetMapping("/all")
 	public ResponseEntity<List<BookDTO>> getAllBooks() {
-		return ResponseEntity.ok(storage.getAllBooks());
+		return ResponseEntity.ok().body(storage.getAllBooks());
 	}
-	
-	@GetMapping
-	public ResponseEntity<BookDTO> getBookByIsbn(@RequestParam String isbn) {
-		return ResponseEntity.of(storage.findByIsbn(isbn));
-	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
-		return ResponseEntity.of(storage.findById(id));
+		return ResponseEntity.of(storage.getBookById(id));
 	}
-	
+
+	@GetMapping()
+	public ResponseEntity<BookDTO> getBookByIsbn(@RequestParam String isbn) {
+		return ResponseEntity.of(storage.getBookByIsbn(isbn));
+	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteBookById(@PathVariable Long id) {
 		storage.deleteBookById(id);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.accepted().build();
 	}
-	
-	@PostMapping										
-	public ResponseEntity<BookDTO> addBook(@RequestBody @Validated(CreateValidationGroup.class) BookDTO dto) {
-		BookDTO response = storage.addBook(dto);
-		return ResponseEntity.created(URI.create("/api/book/" + String.valueOf(response.id()))).body(dto);
+
+	@PostMapping
+	public ResponseEntity<BookDTO> createBook(@RequestBody @Validated(CreateValidationGroup.class) BookDTO bookDTO) {
+		BookDTO newBookDTO = storage.createBook(bookDTO);
+		return ResponseEntity.created(URI.create("/api/book" + String.valueOf(newBookDTO.id()))).body(newBookDTO);
 	}
-	
-	@PatchMapping("/{id}")
-	public ResponseEntity<BookDTO> alterBook(@PathVariable Long id, @RequestBody @Validated BookDTO dto) {
-		BookDTO response = storage.alterBook(id, dto);
-		return response != null ? ResponseEntity.created(URI.create("/api/book/" + String.valueOf(response.id()))).body(dto) :
-			ResponseEntity.badRequest().build();
+
+	@PatchMapping
+	public ResponseEntity<BookDTO> updateBook(@RequestBody @Validated(UpdateValidationGroup.class) BookDTO bookDTO) {
+		BookDTO newBookDTO = storage.updateBook(bookDTO);
+		return ResponseEntity.created(URI.create("/api/book" + String.valueOf(newBookDTO.id()))).body(newBookDTO);
 	}
-	
-	//------------------------------------------------------------------------------------------------------------------------
-	
-	@ExceptionHandler({
-	    DataAccessException.class,
-	    EntityNotFoundException.class 
-	})
-	public ResponseEntity<String> handleDataBaseConstraintsVioloationExcepttion(Exception exception) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
-	} 
 }

@@ -1,10 +1,14 @@
 package com.example.library.model.DTO;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.example.library.model.DTO.validation.CreateValidationGroup;
+import com.example.library.model.DTO.validation.UpdateValidationGroup;
+import jakarta.validation.constraints.*;
 
 public record AuthorDTO(
+		@Null(
+				message = "Author id should not be specified while creating/updating book",
+				groups = {CreateValidationGroup.class, UpdateValidationGroup.class}
+		)
 		Long id,
 		@NotBlank
 		@Size(max = 255)
@@ -19,4 +23,3 @@ public record AuthorDTO(
 		@Pattern(regexp = "^[A-Z][a-z]+$")
 		String lastName
 ) {}
-//Я засунул в автора айди, это мне кажется немного неправильно, но иначе надо писать некую логику в маппере.
