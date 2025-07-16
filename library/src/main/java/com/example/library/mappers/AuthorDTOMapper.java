@@ -17,5 +17,5 @@ public interface AuthorDTOMapper {
 
 	Set<Author> toModelSet(Set<AuthorDTO> dtoSet);
 	
-	Set<AuthorDTO> toDtoSet(Set<Author> modelSet);
+	Set<AuthorDTO> toDTOSet(Set<Author> modelSet);
 }

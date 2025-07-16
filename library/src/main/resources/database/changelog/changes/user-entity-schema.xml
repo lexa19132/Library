@@ -3,8 +3,8 @@
 	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd 
-	http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+	http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 	
 	<changeSet author="lexa" id="create_user_schema">
 		<createSequence sequenceName="user_id_sequence"  dataType="BIGINT" startValue="1" incrementBy="50"/>
@@ -23,7 +23,7 @@
 			</column>
 			
 			<column name="email" type="VARCHAR(255)">
-				<constraints nullable="false" unique="true"/>
+				<constraints nullable="true" unique="true"/>
 			</column>
 		</createTable>
 		

@@ -1,7 +1,6 @@
 package com.example.library.repositories;
 
 import com.example.library.model.entity.UserEntity;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

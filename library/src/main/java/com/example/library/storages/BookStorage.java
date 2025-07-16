@@ -6,11 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import com.example.library.model.DTO.AuthorDTO;
 import com.example.library.model.entity.AuthorEntity;
 import com.example.library.repositories.AuthorRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.library.mappers.AuthorDTOMapper;
@@ -22,34 +20,17 @@ import com.example.library.model.entity.BookEntity;
 import com.example.library.repositories.BookRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
+@Value
 @Component
 public class BookStorage {
 	
-	private final BookRepository repository;
-
-	private final AuthorRepository authorRepository;
-	
-	private final BookEntityMapper bookEntityMapper;
-	
-	private final BookDTOMapper bookDTOMapper;
-	
-	private final AuthorEntityMapper authorEntityMapper;
-	
-	private final AuthorDTOMapper authorDTOMapper;
-	
-	//4 маппера, кста.
-	
-	public BookStorage(BookRepository repository, BookEntityMapper bookEntityMapper, BookDTOMapper bookDTOMapper, AuthorEntityMapper authorEntityMapper, AuthorDTOMapper authorDTOMapper, AuthorRepository authorRepository) {
-		this.repository = repository;
-		this.bookEntityMapper = bookEntityMapper;
-		this.bookDTOMapper = bookDTOMapper;
-		this.authorEntityMapper = authorEntityMapper;
-		this.authorDTOMapper = authorDTOMapper;
-		this.authorRepository = authorRepository;
-	}
+	BookRepository repository;
+	AuthorRepository authorRepository;
+	BookEntityMapper bookEntityMapper;
+	BookDTOMapper bookDTOMapper;
+	AuthorEntityMapper authorEntityMapper;
+	AuthorDTOMapper authorDTOMapper;
 
 	public List<BookDTO> getAllBooks() {
 		return StreamSupport.stream(repository.findAll().spliterator(), false)

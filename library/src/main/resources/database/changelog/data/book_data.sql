@@ -1,4 +1,4 @@
-insert into authors (first_name, middle_name, last_name) values
+INSERT INTO authors (first_name, middle_name, last_name) VALUES
 ('James', 'Alexander', 'Smith'),
 ('Emily', 'Rose', 'Johnson'),
 ('Michael', 'Grace', 'Williams'),

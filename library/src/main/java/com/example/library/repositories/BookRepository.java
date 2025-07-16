@@ -12,7 +12,7 @@ import com.example.library.model.entity.BookEntity;
 
 @Repository
 public interface BookRepository extends CrudRepository<BookEntity, Long>{
-    //Я не нашел как глобально поставить EntityGraph, поэтому пришлось переопределять методы.
+    
     @Override
     @Query("SELECT be FROM Book be WHERE be.id = :id")
     @EntityGraph(value = "books_authors_entity_graph")

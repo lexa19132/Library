@@ -2,7 +2,10 @@ package com.example.library.model.DTO;
 
 import com.example.library.model.DTO.validation.CreateValidationGroup;
 import com.example.library.model.DTO.validation.UpdateValidationGroup;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 public record AuthorDTO(
 		@Null(
