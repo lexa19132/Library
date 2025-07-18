@@ -44,12 +44,6 @@ public class BookApiController {
 
 	@GetMapping("/all")
 	public ResponseEntity<List<BookDTO>> getAllBooks() {
-		var auth = SecurityContextHolder.getContext().getAuthentication();
-
-		Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), List.of(Role.USER, Role.ADMIN));
-
-		SecurityContextHolder.getContext().setAuthentication(newAuth);
-
 		return ResponseEntity.ok().body(storage.getAllBooks());
 	}
 

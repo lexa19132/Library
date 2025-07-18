@@ -13,6 +13,10 @@
             <columnExists tableName="users" columnName="role"/>
             <sequenceExists sequenceName="user_id_sequence"/>
         </preConditions>
+
+        <sql>
+            SELECT SETVAL('user_id_sequence', 3, true);
+        </sql>
                 
         <sqlFile path="classpath:/database/changelog/data/user_single_role_data.sql"
             splitStatements="false"/>

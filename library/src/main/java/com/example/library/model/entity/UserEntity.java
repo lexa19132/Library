@@ -16,7 +16,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.generator.EventType;
 import org.hibernate.type.SqlTypes;
 
 
@@ -45,6 +48,8 @@ public class UserEntity{
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @ColumnDefault(value = "USER")
+    @Generated(event = EventType.INSERT)
     private Role role;
 
     @Column(name = "email", unique = true)

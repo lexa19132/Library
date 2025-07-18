@@ -10,6 +10,7 @@
 	<include file="changes/user-entity-schema.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
 	<include file="changes/insert-book-data.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
 	<include file="changes/user-entity-add-role-column.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
+	<include file="changes/alter-column-role-add-default-value.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
 	<include file="changes/insert-single-role-user-data.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
 
 </databaseChangeLog>

@@ -1,8 +1,11 @@
 package com.example.library.configurations.security;
 
+import jakarta.servlet.DispatcherType;
 import lombok.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,13 +23,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ConfigureWebSecurity {
 
     @Bean
-    public SecurityFilterChain configureSecurityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain configureSecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/api/**").hasAnyRole("USER","ADMIN")
-                    .requestMatchers("/swagger-ui/index.html").authenticated()
-                    .anyRequest().permitAll()
+                        .requestMatchers("/admin/console").hasRole("ADMIN")
+                        .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").authenticated()
+                        .requestMatchers("/registration").permitAll()
+                        .anyRequest().denyAll()
                 )
                 .formLogin(form -> form
                     .loginPage("/login")
@@ -46,5 +50,10 @@ public class ConfigureWebSecurity {
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Bean
+    public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 }
