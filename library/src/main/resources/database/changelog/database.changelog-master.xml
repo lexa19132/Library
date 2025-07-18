@@ -3,10 +3,14 @@
 	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd 
-	http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd" >
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+	http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd" >
 	
 	<include file="changes/book-entity-schema.xml"  relativeToChangelogFile="true" errorIfMissing="true" />
 	<include file="changes/user-entity-schema.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
 	<include file="changes/insert-book-data.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
+	<include file="changes/user-entity-add-role-column.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
+	<include file="changes/alter-column-role-add-default-value.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
+	<include file="changes/insert-single-role-user-data.xml" relativeToChangelogFile="true" errorIfMissing="true"/>
+
 </databaseChangeLog>

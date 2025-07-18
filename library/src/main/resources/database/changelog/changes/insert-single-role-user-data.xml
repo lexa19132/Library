@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+	http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="insert_single_role_user_data" author="lexa">
+                
+        <preConditions>
+            <tableExists tableName="users"/>
+            <columnExists tableName="users" columnName="role"/>
+            <sequenceExists sequenceName="user_id_sequence"/>
+        </preConditions>
+
+        <sql>
+            SELECT SETVAL('user_id_sequence', 3, true);
+        </sql>
+                
+        <sqlFile path="classpath:/database/changelog/data/user_single_role_data.sql"
+            splitStatements="false"/>
+
+        </changeSet>
+</databaseChangeLog>

@@ -8,8 +8,8 @@ import com.example.library.model.entity.BookEntity;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {AuthorEntityMapper.class})
 public interface BookEntityMapper {
+
+	 BookEntity toEntity(Book model);
 	
-	public BookEntity toEntity(Book model);
-	
-	public Book toModel(BookEntity entity);
+	 Book toModel(BookEntity entity);
 }

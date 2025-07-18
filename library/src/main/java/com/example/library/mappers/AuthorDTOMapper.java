@@ -9,14 +9,13 @@ import com.example.library.model.Author;
 import com.example.library.model.DTO.AuthorDTO;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class AuthorDTOMapper {
+public interface AuthorDTOMapper {
 	
-	public abstract Author toModel(AuthorDTO dto);
+	Author toModel(AuthorDTO dto);
 	
-	public abstract AuthorDTO toDTO(Author model);
-	
-	public abstract Set<Author> toModelSet(Set<AuthorDTO> dtoSet);
-	
-	public abstract Set<AuthorDTO> toDtoSet(Set<Author> modelSet);
+	AuthorDTO toDTO(Author model);
 
+	Set<Author> toModelSet(Set<AuthorDTO> dtoSet);
+	
+	Set<AuthorDTO> toDTOSet(Set<Author> modelSet);
 }
